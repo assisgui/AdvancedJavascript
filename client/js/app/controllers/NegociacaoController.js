@@ -16,16 +16,23 @@ class NegociacaoController {
         this._mensagem.texto = 'Negociação adicionada com sucesso';
         this._limpaFormulario();
     }
-  
-  importaNegociacoes() {
-    xhr = new XMLHTTPRequest();
-    xhr.open('GET', 'negociacoes/semana');
-    xhr.send();
-  }
+
+    importaNegociacoes() {
+        let service = new NegociacaoService();
+        service.obterNegociacaoDaSemana((erro, negociacoes) => {
+            if(erro){
+                this._mensagem.texto = erro;
+                return;
+            }
+
+            negociacoes.forEach(negociacao => this._listaNegociacoes.adiciona(negociacao));
+            this._mensagem.texto = 'Negociações importadas com sucesso.';
+        });
+    }
 
     apaga() {
         this._listaNegociacoes.esvazia();
-        this._mensagem = 'Negociações apagadas com sucesso';
+        this._mensagem.texto = 'Negociações apagadas com sucesso';
     }
 
     _criarNegociacao() {
